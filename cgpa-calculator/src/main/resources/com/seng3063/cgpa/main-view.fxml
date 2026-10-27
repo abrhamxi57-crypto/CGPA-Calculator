@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.seng3063.cgpa.controller.MainController"
+            fitToWidth="true" fitToHeight="true"
+            styleClass="root-scroll"
+            stylesheets="@styles.css">
+
+    <VBox styleClass="main-container" spacing="20">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+
+        <!-- ===== HEADER ===== -->
+        <VBox styleClass="header-section" alignment="CENTER" spacing="4">
+            <Label text="🎓 CGPA Calculator" styleClass="app-title"/>
+            <Label text="Student Academic Performance" styleClass="app-subtitle"/>
+        </VBox>
+
+        <!-- ===== DASHBOARD CARDS ===== -->
+        <HBox styleClass="dashboard-row" spacing="16" alignment="CENTER">
+            <!-- Total Courses Card -->
+            <VBox styleClass="stat-card" alignment="CENTER" spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Total Courses" styleClass="stat-label"/>
+                <Label fx:id="totalCoursesLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+
+            <!-- Total Credits Card -->
+            <VBox styleClass="stat-card" alignment="CENTER" spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Total Credits" styleClass="stat-label"/>
+                <Label fx:id="totalCreditsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+
+            <!-- Total Weighted GP Card -->
+            <VBox styleClass="stat-card" alignment="CENTER" spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Weighted GP" styleClass="stat-label"/>
+                <Label fx:id="totalWeightedGpLabel" text="0.00" styleClass="stat-value"/>
+            </VBox>
+
+            <!-- CGPA Card -->
+            <VBox styleClass="stat-card, cgpa-card" alignment="CENTER" spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="CGPA" styleClass="stat-label"/>
+                <Label fx:id="cgpaLabel" text="0.00" styleClass="stat-value-large"/>
+            </VBox>
+
+            <!-- Academic Status Card -->
+            <VBox fx:id="academicStatusCard" styleClass="stat-card, status-card, status-none" alignment="CENTER" spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Academic Status" styleClass="stat-label"/>
+                <Label fx:id="academicStatusLabel" text="No Courses Entered" styleClass="stat-value-status"/>
+            </VBox>
+        </HBox>
+
+        <!-- ===== COURSE INPUT SECTION ===== -->
+        <VBox styleClass="section-card" spacing="16">
+            <Label text="Add / Edit Course" styleClass="section-title"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <!-- Course Code -->
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Course Code" styleClass="field-label"/>
+                    <TextField fx:id="courseCodeField" promptText="e.g. CS101" styleClass="input-field"/>
+                </VBox>
+
+                <!-- Course Title -->
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Course Title" styleClass="field-label"/>
+                    <TextField fx:id="courseTitleField" promptText="e.g. Intro to Programming" styleClass="input-field"/>
+                </VBox>
+
+                <!-- Credit Hours -->
+                <VBox spacing="4" HBox.hgrow="SOMETIMES">
+                    <Label text="Credit Hours" styleClass="field-label"/>
+                    <TextField fx:id="creditHoursField" promptText="e.g. 5" styleClass="input-field" prefWidth="100"/>
+                </VBox>
+
+                <!-- Score -->
+                <VBox spacing="4" HBox.hgrow="SOMETIMES">
+                    <Label text="Score (0–100)" styleClass="field-label"/>
+                    <TextField fx:id="scoreField" promptText="e.g. 85" styleClass="input-field" prefWidth="100"/>
+                </VBox>
+            </HBox>
+
+            <!-- Validation Message -->
+            <Label fx:id="validationLabel" text="" styleClass="error-label" wrapText="true"
+                   visible="false" managed="false"/>
+
+            <!-- Action Buttons -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="addButton" text="➕ Add Course" styleClass="btn, btn-primary"
+                        onAction="#handleAddCourse"/>
+                <Button fx:id="updateButton" text="✏️ Update Selected" styleClass="btn, btn-secondary"
+                        onAction="#handleUpdateCourse"/>
+                <Button fx:id="removeButton" text="🗑️ Remove Selected" styleClass="btn, btn-danger"
+                        onAction="#handleRemoveCourse"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="clearFieldsButton" text="Clear Fields" styleClass="btn, btn-ghost"
+                        onAction="#handleClearFields"/>
+                <Button fx:id="resetAllButton" text="🔄 Reset All" styleClass="btn, btn-ghost-danger"
+                        onAction="#handleResetAll"/>
+            </HBox>
+        </VBox>
+
+        <!-- ===== COURSE TABLE ===== -->
+        <VBox styleClass="section-card" spacing="12" VBox.vgrow="ALWAYS">
+            <Label text="Course Records" styleClass="section-title"/>
+
+            <!-- Empty State -->
+            <VBox fx:id="emptyStateBox" alignment="CENTER" spacing="8" styleClass="empty-state">
+                <Label text="📚" styleClass="empty-icon"/>
+                <Label text="No courses added yet" styleClass="empty-title"/>
+                <Label text="Use the form above to add your first course." styleClass="empty-subtitle"/>
+            </VBox>
+
+            <!-- Table View -->
+            <TableView fx:id="courseTable" styleClass="course-table" VBox.vgrow="ALWAYS"
+                       visible="false" managed="false">
+                <columns>
+                    <TableColumn fx:id="codeColumn" text="Code" prefWidth="90" minWidth="70"/>
+                    <TableColumn fx:id="titleColumn" text="Course Title" prefWidth="200" minWidth="120"/>
+                    <TableColumn fx:id="creditsColumn" text="Credits" prefWidth="70" minWidth="60"/>
+                    <TableColumn fx:id="scoreColumn" text="Score" prefWidth="70" minWidth="60"/>
+                    <TableColumn fx:id="gradeColumn" text="Grade" prefWidth="70" minWidth="60"/>
+                    <TableColumn fx:id="gradePointColumn" text="GP" prefWidth="70" minWidth="55"/>
+                    <TableColumn fx:id="weightedGpColumn" text="Weighted GP" prefWidth="100" minWidth="80"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+
+    </VBox>
+</ScrollPane>
